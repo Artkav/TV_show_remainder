@@ -1,11 +1,30 @@
-version: "3.9"
+version: "3"
 
 services:
 
+  redis:
+    image: redis
+    restart: always
+
   web:
+    restart: always
     build: .
     command: python manage.py runserver 0.0.0.0:8001
     volumes:
-      - /.:/code
+      - .:/TV_show_remainder
     ports:
       - "8001:8001"
+
+  celery:
+    build:
+      context: .
+    command: celery -A show_remainder worker -l info
+    depends_on:
+      - redis
+
+  celery-beat:
+    build:
+      context: .
+    command: celery -A show_remainder beat -l info
+    depends_on:
+      - redis
