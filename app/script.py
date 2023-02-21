@@ -2,9 +2,12 @@ import random
 import time
 import requests
 from bs4 import BeautifulSoup
+from django.conf.global_settings import EMAIL_HOST_USER
+from django.core.mail import send_mass_mail, send_mail
 
 
-# Return list of shows information
+# Return list of shows
+
 def get_data(search_str=''):
     headers = {
         "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) "
@@ -30,7 +33,8 @@ def get_data(search_str=''):
     return show_list
 
 
-# Add information about last series and news in base
+# Return last episode and last news of show
+
 def pars_episodes(url):
     headers = {
         "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Mobile Safari/537.36"
@@ -47,11 +51,20 @@ def pars_episodes(url):
     if episode_data.get('class'):
         episode_data = episode_data.find_next('tr')
     last_episode = episode_data.find('td', class_='gamma').find('div').text.strip().split('\n')[0]
-    last_episode_url = url + episode_data.find('td', class_='gamma').get('onclick').split("'")[1]
+    last_episode_url = 'https://www.lostfilm.tv' + episode_data.find('td', class_='gamma').get('onclick').split("'")[1]
 
     news_data = soup_news.find('div', class_='news-box')
-    last_news_url = url + news_data.find('a').get('href')
+    last_news_url = 'https://www.lostfilm.tv' + news_data.find('a').get('href')
     last_news = news_data.find('div', class_='news-title').text
 
     return last_news, last_news_url, last_episode, last_episode_url
 
+
+# Sends an email to all users who are subscribed to the show
+
+def send_subj_mail(show, subject, subj_name, url):
+    message = f"В сериале {show} вышла новая {subject} - {subj_name}. Посмотреть можно по ссылке {url}"
+    recipient_list = []
+    for user in show.users.all():
+        recipient_list.append(user.email)
+    send_mail(f'Вышла новая {subject}.', message, EMAIL_HOST_USER, recipient_list)

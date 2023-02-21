@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from app.models import Show, ShowInfo
 from app.script import pars_episodes, get_data
 
+from app.tasks import pars_information
+
 
 def index(request):
     return render(request, 'app/index.html', context={})
@@ -38,4 +40,11 @@ def add_to_list(request):
         )
         new_show_info.save()
 
+    return redirect('index')
+
+
+
+
+def send_mail(request):
+    pars_information()
     return redirect('index')

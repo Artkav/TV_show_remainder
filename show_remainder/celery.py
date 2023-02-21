@@ -1,7 +1,7 @@
 import os
 
 from celery import Celery
-from app.tasks import print_20_sec
+# from app.tasks import print_20_sec
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'show_remainder.settings')
@@ -35,5 +35,5 @@ def add(x, y):
 # app.conf.timezone = 'UTC'
 
 
-app.add_periodic_task(20, print_20_sec.s(), name='add-every-20-seconds')
+# app.add_periodic_task(20, print_20_sec.s(), name='add-every-20-seconds')
 

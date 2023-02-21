@@ -163,13 +163,13 @@ LOGOUT_REDIRECT_URL = 'login'
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
 
-#Celery_beat
+# Celery_beat
 
-# CELERY_BEAT_SCHEDULE = {
-#     "sample_task": {
-#         "task": "app.tasks.print_30_sec",
-#         "schedule": 60.0,
-#     },
-# }
-#
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "app.tasks.pars_information",
+        "schedule": crontab(minute=0, hour='9, 11, 13, 15, 17, 19, 20, 21'),
+    },
+}
+
 

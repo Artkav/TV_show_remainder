@@ -5,6 +5,8 @@ services:
   redis:
     image: redis
     restart: always
+    volumes:
+      - .:/TV_show_remainder
 
   web:
     restart: always
@@ -21,6 +23,8 @@ services:
     command: celery -A show_remainder worker -l info
     depends_on:
       - redis
+    volumes:
+      - .:/TV_show_remainder
 
   celery-beat:
     build:
@@ -28,3 +32,5 @@ services:
     command: celery -A show_remainder beat -l info
     depends_on:
       - redis
+    volumes:
+      - .:/TV_show_remainder
