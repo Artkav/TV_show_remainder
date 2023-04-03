@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from celery.schedules import crontab
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,7 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_auth',
+    'rest_registration',
+    'rest_framework',
+    'rest_framework.authtoken',
     'app',
+    'api',
     "crispy_forms",
     "crispy_bootstrap5",
 
@@ -156,6 +161,26 @@ REGISTRATION_OPEN = True
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'
+
+
+
+# rest registration settings
+
+REST_REGISTRATION = {
+    # 'USER_LOGIN_FIELDS': ('email'),
+    'REGISTER_VERIFICATION_ENABLED': True,
+    'REGISTER_VERIFICATION_URL': '/verify-user/',
+    'VERIFICATION_FROM_EMAIL': 'not_reply@mail.com',
+
+    'REGISTER_EMAIL_VERIFICATION_ENABLED': False,
+    'RESET_PASSWORD_VERIFICATION_ENABLED': False,
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
 
 
 
